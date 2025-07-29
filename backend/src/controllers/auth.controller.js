@@ -1,4 +1,4 @@
-import {asyncHandler} from '../utils/AsyncHandler.js'
+import asyncHandler from '../utils/AsyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import { User } from '../models/user.model.js';
@@ -6,7 +6,6 @@ import otpStore from '../utils/otpStore.js'
 import sendSMS from "../utils/sendSms.js";
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
-import mongoose from 'mongoose'
 
 const sendSignUpOtp = asyncHandler( async(req,res)=>{
     const {phone} = req.body;
