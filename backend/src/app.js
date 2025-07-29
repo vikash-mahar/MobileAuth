@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser'
 const app=express()
 
 app.use(cors({
-    origin:["http://localhost:3000"],
-    // origin:["https://mobileauth.onrender.com"],
+    // origin:["http://localhost:3000"],
+    origin:["https://mobileauth.onrender.com"],
     methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials:true
 }))
