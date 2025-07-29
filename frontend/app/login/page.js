@@ -7,100 +7,86 @@ import axiosInstance from '../../utils/axios.helper.js'
 export default function LoginPage() {
   const [step, setStep] = useState(1)
   const router = useRouter()
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm()
+  const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSendOtp = async (data) => {
     try {
       const response = await axiosInstance.post("/auth/login/send-otp", {
         phone: data.phone
-      });
-      alert("OTP sent successfully");
-      setStep(2);
+      })
+      alert("OTP sent successfully")
+      setStep(2)
+      
     } catch (error) {
-      console.log(error.response?.data);
-      alert(error.response?.data?.message || 'Something went wrong');
+      console.log("error",error)
+
+      console.log(error.response?.data)
+      alert(error.response?.data?.message || 'Something went wrong')
     }
-  };
+  }
 
   const onVerifyOtp = async (data) => {
     try {
       const response = await axiosInstance.post("/auth/login/verify-otp", {
         phone: data.phone,
         otp: data.otp
-      });
+      })
 
-      alert("Login successful");
-      localStorage.setItem("token", response.data.data);
-      localStorage.setItem("phone", data.phone);
-      router.push("/");
+      alert("Login successful")
+      localStorage.setItem("token", response.data.data)
+      localStorage.setItem("phone", data.phone)
+      router.push("/")
+
+
     } catch (error) {
-      console.log(error.response?.data);
-      alert(error.response?.data?.message || 'OTP verification failed');
+      console.log("error",error)
+      console.log(error.response?.data)
+      alert(error.response?.data?.message || 'OTP verification failed')
     }
-  };
+  }
 
   return (
-    <div className='w-screen sm:flex bg-blue-50 h-[700px]'>
-      <div className='sm:w-1/2'>
-      
-        <div className='w-full h-full pl-[14%] pr-[20%]'>
-          <div className='my-[5%]'>
-            <p className='text-4xl py-[20px] text-gray-700'>Welcome! We'd Love to Know You Better 😊</p>
-            <p className='text-lg text-gray-500 px-[5px] pb-[20px]'>Your presence matters — help us keep our community connected and safe.</p>
-          </div>
-
-          <div className="bg-white p-4 rounded shadow-md w-[350px]">
-            <div className='flex items-center gap-2 mb-4'>
-              <h2 className="text-2xl font-semibold text-black">Login?</h2>
-              <h4 onClick={() => router.push('/signup')} className='text-sky-600 hover:text-sky-800 cursor-pointer'>Create a New Account?</h4>
-            </div>
-
-            <form
-              onSubmit={handleSubmit(step === 1 ? onSendOtp : onVerifyOtp)}
-              className="space-y-4 text-black"
-            >
-              <input
-                type="text"
-                placeholder="Enter mobile number"
-                className="w-full p-2 border rounded mb-1 text-gray-800"
-                {...register("phone", {
-                  required: "Mobile number is required",
-                  pattern: {
-                    value: /^\d{10}$/,
-                    message: "Mobile number must be exactly 10 digits",
-                  }
-                })}
-              />
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
-
-              {step === 2 && (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    className="w-full border p-2 rounded"
-                    {...register("otp", {
-                      required: "OTP is required",
-                      pattern: {
-                        value: /^\d{6}$/,
-                        message: "OTP must be 6 digits"
-                      }
-                    })}
-                  />
-                  {errors.otp && <p className="text-red-500 text-sm">{errors.otp.message}</p>}
-                </>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              >
-                {step === 1 ? "Send OTP" : "Verify & Login"}
-              </button>
-            </form>
-          </div>
+    <div className="w-screen h-screen bg-blue-50 flex flex-col sm:flex-row items-center justify-center px-4 py-10">
+      <div className="sm:w-1/2 w-full h-full flex items-center justify-center">
+        <div className="text-center p-6">
+          <h2 className="text-2xl text-blue-700 font-bold">Your Security, Our Priority 🔐</h2>
+          <p className="text-gray-600 mt-2 text-sm">Login with your mobile number and OTP to access your account securely.</p>
         </div>
       </div>
+
+
+      <div className="sm:w-1/2 w-full max-w-md bg-white shadow-lg rounded-xl p-8">
+        <h2 className="text-3xl font-semibold text-center text-blue-700 mb-6">Login</h2>
+        <form onSubmit={handleSubmit(step === 1 ? onSendOtp : onVerifyOtp)} className="space-y-4">
+          <input type="text" placeholder="Enter Mobile Number"
+            className="w-full p-3 border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            {...register("phone", {
+              required: "Mobile number is required",
+              pattern: { value: /^\d{10}$/, message: "Enter valid 10-digit number" }
+            })}/>
+          {errors.phone && <p className="text-sm text-red-500">{errors.phone.message}</p>}
+
+          {step === 2 && (
+            <div>
+              <input type="text" placeholder="Enter OTP" className="w-full text-gray-900 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                {...register("otp", {
+                  required: "OTP is required",
+                  pattern: { value: /^\d{6}$/, message: "OTP must be 6 digits" }
+                })}/>
+              {errors.otp && <p className="text-sm text-red-500">{errors.otp.message}</p>}
+            </div>
+          )}
+
+          <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition">
+            {step === 1 ? "Send OTP" : "Verify & Login"}
+          </button>
+
+        </form>
+
+        <p className="text-center text-sm text-gray-600 mt-4">Don’t have an account?{" "}
+          <span className="text-blue-600 hover:underline cursor-pointer" onClick={() => router.push('/signup')}>Signup now</span>
+        </p>
+      </div>
     </div>
-  );
+  )
 }
