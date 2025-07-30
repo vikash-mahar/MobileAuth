@@ -20,7 +20,7 @@ export default function LoginPage() {
     } 
     catch (error) {
       console.log("error", error)
-      alert(error.response?.data?.message || 'try again later')
+      alert(error.response?.data?.message || 'Refresh the page or Try again later')
     } finally {
       setLoading(false)
     }
